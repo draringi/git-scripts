@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e -u
+cd $HOME/repos
+repos=$(ls)
+for repo in $repos; do
+	cd $HOME/repos/$repo
+	git worktree prune
+	git gc --aggressive
+	git maintenance run
+done

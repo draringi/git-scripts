@@ -1,0 +1,17 @@
+#/bin/sh
+repo=$1
+if [ -z "$repo" ]; then
+	echo "Missing argument: Repo name"
+fi
+set -e -u
+REPO_DIR=$HOME/repos/$repo.git
+WS_DIR=$HOME/workspaces/$repo.ws01
+
+git init --bare $REPO_DIR
+cd $REPO_DIR
+rm description
+echo "$repo" > description
+base_tree=$(git write-tree)
+head_commit=$(git commit-tree -m "Creation of repo $repo" $base_tree)
+git update-ref refs/heads/main $head_commit
+git worktree add $WS_DIR main
